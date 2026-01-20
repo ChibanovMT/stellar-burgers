@@ -25,18 +25,17 @@ const initialState: AuthState = {
   error: null
 };
 
-export const fetchUser = createAsyncThunk<
-  TUser,
-  void,
-  { rejectValue: string }
->('auth/fetchUser', async (_, { rejectWithValue }) => {
-  try {
-    const data = await getUserApi();
-    return data.user;
-  } catch (err) {
-    return rejectWithValue('Не удалось получить пользователя');
+export const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
+  'auth/fetchUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getUserApi();
+      return data.user;
+    } catch (err) {
+      return rejectWithValue('Не удалось получить пользователя');
+    }
   }
-});
+);
 
 export const loginUser = createAsyncThunk<
   TUser,
@@ -160,4 +159,3 @@ const authSlice = createSlice({
 });
 
 export const authReducer = authSlice.reducer;
-

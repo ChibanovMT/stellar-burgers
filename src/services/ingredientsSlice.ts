@@ -24,7 +24,8 @@ export const fetchIngredients = createAsyncThunk<
     return data;
   } catch (err) {
     const message =
-      (err as { message?: string })?.message || 'Не удалось загрузить ингредиенты';
+      (err as { message?: string })?.message ||
+      'Не удалось загрузить ингредиенты';
     return rejectWithValue(message);
   }
 });
@@ -54,4 +55,3 @@ const ingredientsSlice = createSlice({
 });
 
 export const ingredientsReducer = ingredientsSlice.reducer;
-

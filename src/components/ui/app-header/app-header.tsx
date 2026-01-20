@@ -12,20 +12,27 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({
   userName,
   onConstructorClick,
   onFeedClick,
-  onProfileClick
+  onProfileClick,
+  isConstructorActive = false,
+  isFeedActive = false,
+  isProfileActive = false
 }) => (
   <header className={styles.header}>
     <nav className={`${styles.menu} p-4`}>
       <div className={styles.menu_part_left}>
         <button
           type='button'
-          className={styles.button}
+          className={`${styles.button} ${isConstructorActive ? styles.link_active : ''}`}
           onClick={onConstructorClick}
         >
           <BurgerIcon type={'primary'} />
           <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
         </button>
-        <button type='button' className={styles.button} onClick={onFeedClick}>
+        <button
+          type='button'
+          className={`${styles.button} ${isFeedActive ? styles.link_active : ''}`}
+          onClick={onFeedClick}
+        >
           <ListIcon type={'primary'} />
           <p className='text text_type_main-default ml-2'>Лента заказов</p>
         </button>
@@ -35,7 +42,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({
       </div>
       <button
         type='button'
-        className={styles.button}
+        className={`${styles.button} ${isProfileActive ? styles.link_active : ''}`}
         onClick={onProfileClick}
       >
         <div className={styles.link_position_last}>

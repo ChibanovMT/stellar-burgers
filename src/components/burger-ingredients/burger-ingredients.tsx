@@ -1,14 +1,58 @@
-import { useState, useRef, useEffect, FC } from 'react';
+import { useState, useRef, useEffect, FC, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { TTabMode } from '@utils-types';
+import { TTabMode, TIngredient } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { useDispatch, useSelector } from '../../services/store';
+import { fetchIngredients } from '../../services/ingredientsSlice';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const dispatch = useDispatch();
+  const ingredients = useSelector((state) => state.ingredients.items);
+  const constructorItems = useSelector((state) => state.constructor);
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
+
+  const ingredientsCounters = useMemo(() => {
+    const counters: { [key: string]: number } = {};
+    if (!constructorItems) {
+      return counters;
+    }
+    const allIngredients = [
+      ...(constructorItems.bun ? [constructorItems.bun] : []),
+      ...(constructorItems.ingredients || [])
+    ];
+
+    allIngredients.forEach((item) => {
+      counters[item._id] = (counters[item._id] || 0) + 1;
+    });
+
+    return counters;
+  }, [constructorItems]);
+
+  const buns = useMemo(
+    () =>
+      (Array.isArray(ingredients) ? ingredients : []).filter(
+        (item: TIngredient) => item.type === 'bun'
+      ),
+    [ingredients]
+  );
+  const mains = useMemo(
+    () =>
+      (Array.isArray(ingredients) ? ingredients : []).filter(
+        (item: TIngredient) => item.type === 'main'
+      ),
+    [ingredients]
+  );
+  const sauces = useMemo(
+    () =>
+      (Array.isArray(ingredients) ? ingredients : []).filter(
+        (item: TIngredient) => item.type === 'sauce'
+      ),
+    [ingredients]
+  );
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -47,8 +91,6 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return null;
-
   return (
     <BurgerIngredientsUI
       currentTab={currentTab}
@@ -62,6 +104,7 @@ export const BurgerIngredients: FC = () => {
       mainsRef={mainsRef}
       saucesRef={saucesRef}
       onTabClick={onTabClick}
+      ingredientsCounters={ingredientsCounters}
     />
   );
 };

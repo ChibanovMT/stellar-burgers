@@ -1,5 +1,11 @@
 import { FC, useEffect } from 'react';
-import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+  useLocation
+} from 'react-router-dom';
 import {
   ConstructorPage,
   Feed,
@@ -33,6 +39,25 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
 
   if (!user) {
     return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+
+  return children;
+};
+
+type ProtectedAuthRouteProps = {
+  children: JSX.Element;
+};
+
+const ProtectedAuthRoute: FC<ProtectedAuthRouteProps> = ({ children }) => {
+  const user = useSelector((state) => state.auth.user);
+  const isAuthChecked = useSelector((state) => state.auth.isAuthChecked);
+
+  if (!isAuthChecked) {
+    return null;
+  }
+
+  if (user) {
+    return <Navigate to='/' replace />;
   }
 
   return children;
@@ -85,10 +110,24 @@ const App = () => {
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
 
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route
+          path='/login'
+          element={<ProtectedAuthRoute>{<Login />}</ProtectedAuthRoute>}
+        />
+        <Route
+          path='/register'
+          element={<ProtectedAuthRoute>{<Register />}</ProtectedAuthRoute>}
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <ProtectedAuthRoute>{<ForgotPassword />}</ProtectedAuthRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={<ProtectedAuthRoute>{<ResetPassword />}</ProtectedAuthRoute>}
+        />
         <Route
           path='/profile'
           element={<ProtectedRoute>{<Profile />}</ProtectedRoute>}

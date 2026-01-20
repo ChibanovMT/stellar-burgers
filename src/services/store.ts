@@ -8,11 +8,15 @@ import {
 import { ingredientsReducer } from './ingredientsSlice';
 import { authReducer } from './authSlice';
 import { ordersReducer } from './ordersSlice';
+import { constructorReducer } from './constructorSlice';
+import { feedsReducer } from './feedsSlice';
 
 const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   auth: authReducer,
-  orders: ordersReducer
+  orders: ordersReducer,
+  constructor: constructorReducer,
+  feeds: feedsReducer
 });
 
 const store = configureStore({

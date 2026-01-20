@@ -3,4 +3,7 @@ export type TAppHeaderUIProps = {
   onConstructorClick: () => void;
   onFeedClick: () => void;
   onProfileClick: () => void;
+  isConstructorActive?: boolean;
+  isFeedActive?: boolean;
+  isProfileActive?: boolean;
 };
