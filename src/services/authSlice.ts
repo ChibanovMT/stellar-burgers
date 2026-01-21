@@ -152,7 +152,17 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload || 'Ошибка обновления профиля';
       })
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(logoutUser.fulfilled, (state) => {
+        state.isLoading = false;
+        state.user = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || 'Ошибка выхода';
         state.user = null;
       });
   }

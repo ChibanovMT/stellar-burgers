@@ -3,17 +3,11 @@ import { useInView } from 'react-intersection-observer';
 
 import { TTabMode, TIngredient } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import { useDispatch, useSelector } from '../../services/store';
-import { fetchIngredients } from '../../services/ingredientsSlice';
+import { useSelector } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
-  const dispatch = useDispatch();
   const ingredients = useSelector((state) => state.ingredients.items);
   const constructorItems = useSelector((state) => state.constructor);
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
 
   const ingredientsCounters = useMemo(() => {
     const counters: { [key: string]: number } = {};

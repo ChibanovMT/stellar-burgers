@@ -23,12 +23,13 @@ export const OrderInfo: FC = () => {
   const isLoading = useSelector((state) => state.feeds.isLoading);
 
   const orderData = currentOrder || orderFromOrders || orderFromFeeds;
+  const hasOrderData = !!orderData;
 
   useEffect(() => {
-    if (orderNumber && !orderData) {
+    if (orderNumber && !hasOrderData) {
       dispatch(fetchOrderByNumber(orderNumber));
     }
-  }, [dispatch, orderNumber, orderData]);
+  }, [dispatch, orderNumber, hasOrderData]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

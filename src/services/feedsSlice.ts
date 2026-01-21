@@ -47,6 +47,9 @@ export const fetchOrderByNumber = createAsyncThunk<
 >('feeds/fetchOrderByNumber', async (number, { rejectWithValue }) => {
   try {
     const data = await getOrderByNumberApi(number);
+    if (!data.orders || data.orders.length === 0) {
+      return rejectWithValue('Заказ не найден');
+    }
     return data.orders[0];
   } catch (err) {
     const message =

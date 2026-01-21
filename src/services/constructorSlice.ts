@@ -40,8 +40,10 @@ const constructorSlice = createSlice({
     ) => {
       const { dragIndex, hoverIndex } = action.payload;
       const dragItem = state.ingredients[dragIndex];
-      state.ingredients.splice(dragIndex, 1);
-      state.ingredients.splice(hoverIndex, 0, dragItem);
+      if (dragItem) {
+        state.ingredients.splice(dragIndex, 1);
+        state.ingredients.splice(hoverIndex, 0, dragItem);
+      }
     },
     clearConstructor: (state) => {
       state.bun = null;
