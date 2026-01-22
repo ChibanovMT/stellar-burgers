@@ -27,7 +27,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
         ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
-        ignoredPaths: ['items.dates', 'constructor']
+        ignoredPaths: ['items.dates']
       },
       immutableCheck: false
     })
