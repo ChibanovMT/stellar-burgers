@@ -7,7 +7,7 @@ import { useSelector } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
   const ingredients = useSelector((state) => state.ingredients.items);
-  const constructorItems = useSelector((state) => state.constructor);
+  const constructorItems = useSelector((state) => state.constructorLALALA);
 
   const ingredientsCounters = useMemo(() => {
     const counters: { [key: string]: number } = {};

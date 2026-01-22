@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   auth: authReducer,
   orders: ordersReducer,
-  constructor: constructorReducer,
+  constructorLALALA: constructorReducer,
   feeds: feedsReducer
 });
 
@@ -27,7 +27,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
         ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
-        ignoredPaths: ['items.dates']
+        ignoredPaths: ['items.dates', 'constructor']
       },
       immutableCheck: false
     })
