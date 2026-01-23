@@ -14,6 +14,25 @@
   flex-basis: 35%;
 }
 
+.button {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-inactive-color);
+  padding: 0;
+  text-decoration: none;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.button.link_active {
+  color: var(--text-primary-color);
+}
+
 .link {
   display: flex;
   text-decoration: none;

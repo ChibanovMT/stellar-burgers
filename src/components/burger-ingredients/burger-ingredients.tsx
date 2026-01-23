@@ -14,14 +14,18 @@ export const BurgerIngredients: FC = () => {
     if (!constructorItems) {
       return counters;
     }
-    const allIngredients = [
-      ...(constructorItems.bun ? [constructorItems.bun] : []),
-      ...(constructorItems.ingredients || [])
-    ];
 
-    allIngredients.forEach((item) => {
-      counters[item._id] = (counters[item._id] || 0) + 1;
-    });
+    // Для булок всегда показываем 2 (верхняя и нижняя)
+    if (constructorItems.bun) {
+      counters[constructorItems.bun._id] = 2;
+    }
+
+    // Для остальных ингредиентов считаем количество
+    if (constructorItems.ingredients) {
+      constructorItems.ingredients.forEach((item) => {
+        counters[item._id] = (counters[item._id] || 0) + 1;
+      });
+    }
 
     return counters;
   }, [constructorItems]);

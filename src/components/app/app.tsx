@@ -15,7 +15,9 @@ import {
   ResetPassword,
   Profile,
   ProfileOrders,
-  NotFound404
+  NotFound404,
+  IngredientDetailsPage,
+  OrderDetailsPage
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
@@ -23,6 +25,7 @@ import styles from './app.module.css';
 import { AppHeader, Modal, OrderInfo, IngredientDetails } from '@components';
 import { useDispatch, useSelector } from '../../services/store';
 import { fetchUser } from '../../services/authSlice';
+import { fetchIngredients } from '../../services/ingredientsSlice';
 
 type ProtectedRouteProps = {
   children: JSX.Element;
@@ -65,7 +68,9 @@ const ProtectedAuthRoute: FC<ProtectedAuthRouteProps> = ({ children }) => {
 
 const FeedOrderModal: FC = () => {
   const navigate = useNavigate();
-  const handleClose = () => navigate('/feed');
+  const location = useLocation();
+  const background = (location.state as { background?: Location })?.background;
+  const handleClose = () => navigate(background?.pathname || '/feed', { replace: true });
 
   return (
     <Modal title='Детали заказа' onClose={handleClose}>
@@ -76,7 +81,9 @@ const FeedOrderModal: FC = () => {
 
 const IngredientModal: FC = () => {
   const navigate = useNavigate();
-  const handleClose = () => navigate('/');
+  const location = useLocation();
+  const background = (location.state as { background?: Location })?.background;
+  const handleClose = () => navigate(background?.pathname || '/', { replace: true });
 
   return (
     <Modal title='Детали ингредиента' onClose={handleClose}>
@@ -87,7 +94,9 @@ const IngredientModal: FC = () => {
 
 const ProfileOrderModal: FC = () => {
   const navigate = useNavigate();
-  const handleClose = () => navigate('/profile/orders');
+  const location = useLocation();
+  const background = (location.state as { background?: Location })?.background;
+  const handleClose = () => navigate(background?.pathname || '/profile/orders', { replace: true });
 
   return (
     <Modal title='Детали заказа' onClose={handleClose}>
@@ -98,15 +107,22 @@ const ProfileOrderModal: FC = () => {
 
 const App = () => {
   const dispatch = useDispatch();
+  const ingredients = useSelector((state) => state.ingredients.items);
 
   useEffect(() => {
     dispatch(fetchUser());
-  }, [dispatch]);
+    if (ingredients.length === 0) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length]);
+
+  const location = useLocation();
+  const background = (location.state as { background?: Location })?.background;
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes>
+      <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
 
@@ -137,15 +153,25 @@ const App = () => {
           element={<ProtectedRoute>{<ProfileOrders />}</ProtectedRoute>}
         />
 
-        <Route path='/feed/:number' element={<FeedOrderModal />} />
-        <Route path='/ingredients/:id' element={<IngredientModal />} />
+        <Route path='/ingredients/:id' element={<IngredientDetailsPage />} />
+        <Route path='/feed/:number' element={<OrderDetailsPage />} />
         <Route
           path='/profile/orders/:number'
-          element={<ProtectedRoute>{<ProfileOrderModal />}</ProtectedRoute>}
+          element={<ProtectedRoute>{<OrderDetailsPage />}</ProtectedRoute>}
         />
 
         <Route path='*' element={<NotFound404 />} />
       </Routes>
+      {background && (
+        <Routes>
+          <Route path='/feed/:number' element={<FeedOrderModal />} />
+          <Route path='/ingredients/:id' element={<IngredientModal />} />
+          <Route
+            path='/profile/orders/:number'
+            element={<ProtectedRoute>{<ProfileOrderModal />}</ProtectedRoute>}
+          />
+        </Routes>
+      )}
     </div>
   );
 };
