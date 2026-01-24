@@ -5,7 +5,6 @@ import { OrderInfoUI } from '../../components/ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
 import { fetchOrderByNumber } from '../../services/feedsSlice';
-import { fetchIngredients } from '../../services/ingredientsSlice';
 
 export const OrderDetailsPage: FC = () => {
   const dispatch = useDispatch();
@@ -25,12 +24,6 @@ export const OrderDetailsPage: FC = () => {
 
   const orderData = currentOrder || orderFromOrders || orderFromFeeds;
   const hasOrderData = !!orderData;
-
-  useEffect(() => {
-    if (ingredients.length === 0 && !isIngredientsLoading) {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, ingredients.length, isIngredientsLoading]);
 
   useEffect(() => {
     if (orderNumber && !hasOrderData) {

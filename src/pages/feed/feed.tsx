@@ -1,6 +1,6 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
 import { fetchFeeds } from '../../services/feedsSlice';
 
@@ -13,9 +13,9 @@ export const Feed: FC = () => {
     dispatch(fetchFeeds());
   }, [dispatch]);
 
-  const handleGetFeeds = () => {
+  const handleGetFeeds = useCallback(() => {
     dispatch(fetchFeeds());
-  };
+  }, [dispatch]);
 
   if (isLoading && !orders.length) {
     return <Preloader />;
