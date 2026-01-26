@@ -11,7 +11,7 @@ export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useSelector((state) => state.auth.user);
-  const constructorItems = useSelector((state) => state.constructor);
+  const constructorItems = useSelector((state) => state.constructorLALALA);
   const orderRequest = useSelector((state) => state.orders.orderRequest);
   const orderModalData = useSelector((state) => state.orders.orderModalData);
 

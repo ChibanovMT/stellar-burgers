@@ -7,21 +7,25 @@ import { useSelector } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
   const ingredients = useSelector((state) => state.ingredients.items);
-  const constructorItems = useSelector((state) => state.constructor);
+  const constructorItems = useSelector((state) => state.constructorLALALA);
 
   const ingredientsCounters = useMemo(() => {
     const counters: { [key: string]: number } = {};
     if (!constructorItems) {
       return counters;
     }
-    const allIngredients = [
-      ...(constructorItems.bun ? [constructorItems.bun] : []),
-      ...(constructorItems.ingredients || [])
-    ];
 
-    allIngredients.forEach((item) => {
-      counters[item._id] = (counters[item._id] || 0) + 1;
-    });
+    // Для булок всегда показываем 2 (верхняя и нижняя)
+    if (constructorItems.bun) {
+      counters[constructorItems.bun._id] = 2;
+    }
+
+    // Для остальных ингредиентов считаем количество
+    if (constructorItems.ingredients) {
+      constructorItems.ingredients.forEach((item) => {
+        counters[item._id] = (counters[item._id] || 0) + 1;
+      });
+    }
 
     return counters;
   }, [constructorItems]);

@@ -6,6 +6,10 @@
   text-align: center;
 }
 
+.status_wrap {
+  text-align: center;
+}
+
 .status {
   color: #00cccc;
 }

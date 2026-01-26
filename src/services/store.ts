@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   auth: authReducer,
   orders: ordersReducer,
-  constructor: constructorReducer,
+  constructorLALALA: constructorReducer,
   feeds: feedsReducer
 });
 
