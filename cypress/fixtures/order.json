@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "name": "Test order",
+  "order": {
+    "_id": "order1",
+    "number": 12345,
+    "status": "done",
+    "name": "Test order",
+    "createdAt": "2020-10-10T10:10:10.000Z",
+    "updatedAt": "2020-10-10T10:10:10.000Z",
+    "ingredients": ["bun1", "main1"]
+  }
+}
+
