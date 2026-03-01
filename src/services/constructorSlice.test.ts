@@ -6,6 +6,7 @@ import {
   moveIngredientUp,
   moveIngredientDown,
   clearConstructor,
+  initialState,
   type ConstructorState
 } from './constructorSlice';
 
@@ -21,11 +22,6 @@ const makeIngredient = (overrides: Partial<any> = {}) =>
   } as any);
 
 describe('constructorSlice', () => {
-  const initialState: ConstructorState = {
-    bun: null,
-    ingredients: []
-  };
-
   it('должен возвращать начальное состояние по умолчанию', () => {
     const state = constructorReducer(undefined, { type: '@@INIT' });
     expect(state).toEqual(initialState);

@@ -10,7 +10,7 @@ export type OrdersState = {
   error: string | null;
 };
 
-const initialState: OrdersState = {
+export const initialState: OrdersState = {
   items: [],
   orderRequest: false,
   orderModalData: null,

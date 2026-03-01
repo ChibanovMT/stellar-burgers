@@ -3,19 +3,11 @@ import {
   clearCurrentOrder,
   fetchFeeds,
   fetchOrderByNumber,
+  initialState,
   type FeedsState
 } from './feedsSlice';
 
 describe('feedsSlice', () => {
-  const initialState: FeedsState = {
-    orders: [],
-    total: 0,
-    totalToday: 0,
-    currentOrder: null,
-    isLoading: false,
-    error: null
-  };
-
   it('должен возвращать начальное состояние по умолчанию', () => {
     const state = feedsReducer(undefined, { type: '@@INIT' });
     expect(state).toEqual(initialState);

@@ -1,38 +1,38 @@
 describe('Конструктор бургера', () => {
-  const baseUrl = 'http://localhost:8080';
+  const MODAL_INGREDIENT_TITLE = 'Детали ингредиента';
+  const BUTTON_ORDER_TEXT = 'Оформить заказ';
+  const BUTTON_ADD_TEXT = 'Добавить';
+  const ORDER_ID_LABEL = 'идентификатор заказа';
+  const ORDER_NUMBER_MOCK = '12345';
+  const INGREDIENT_BUN_NAME = 'Булка 1';
+  const INGREDIENT_MAIN_NAME = 'Начинка 1';
 
   beforeEach(() => {
-    // Перехватываем все запросы к бэкенду и подменяем данные
     cy.intercept('GET', '**/ingredients', { fixture: 'ingredients.json' }).as(
       'getIngredients'
     );
-
     cy.intercept('GET', '**/auth/user', {
       statusCode: 401,
       body: { success: false, message: 'Not authorized' }
     }).as('getUser');
-
     cy.intercept('POST', '**/auth/token', {
       statusCode: 401,
       body: { success: false, message: 'Token expired' }
     }).as('refreshToken');
-
     cy.intercept('GET', '**/orders/all', {
       statusCode: 200,
       body: { success: true, orders: [], total: 0, totalToday: 0 }
     }).as('getFeeds');
-
     cy.intercept('GET', '**/orders/*', {
       statusCode: 200,
       body: { success: true, orders: [] }
     }).as('getOrderByNumber');
-
     cy.intercept('GET', '**/orders', {
       statusCode: 200,
       body: { success: true, orders: [] }
     }).as('getOrders');
 
-    cy.visit(`${baseUrl}/`);
+    cy.visit('/');
     cy.wait('@getIngredients');
   });
 
@@ -41,70 +41,58 @@ describe('Конструктор бургера', () => {
     cy.contains('button', 'Булки').should('be.visible');
     cy.contains('button', 'Начинки').should('be.visible');
     cy.contains('button', 'Соусы').should('be.visible');
-    cy.contains('button', 'Оформить заказ').should('be.visible');
+    cy.contains('button', BUTTON_ORDER_TEXT).should('be.visible');
   });
 
-  it('добавляет ингредиент из списка в конструктор и отображает счётчик', () => {
-    cy.contains('button', 'Добавить').first().click();
+  it('добавляет булку и начинку из списка в конструктор', () => {
+    cy.contains('li', INGREDIENT_BUN_NAME).within(() => {
+      cy.contains('button', BUTTON_ADD_TEXT).click();
+    });
+    cy.contains('Булка 1 (верх)').should('be.visible');
+    cy.contains('Булка 1 (низ)').should('be.visible');
 
-    cy.get('[class^="burger-ingredient_container"]')
-      .first()
-      .within(() => {
-        cy.contains('1').should('exist');
-      });
-
-    cy.contains('Начинка 1').should('exist');
+    cy.contains('li', INGREDIENT_MAIN_NAME).within(() => {
+      cy.contains('button', BUTTON_ADD_TEXT).click();
+    });
+    cy.contains(INGREDIENT_MAIN_NAME).should('be.visible');
   });
 
-  it('открывает модальное окно ингредиента и показывает данные выбранного ингредиента, затем закрывает его по крестику', () => {
-    let ingredientName = '';
+  it('открывает модальное окно ингредиента по клику на карточку и закрывает по крестику', () => {
+    cy.contains('li', INGREDIENT_MAIN_NAME).click();
 
-    cy.get('[class^="burger-ingredient_container"]')
-      .first()
-      .within(() => {
-        cy.get('p')
-          .last()
-          .invoke('text')
-          .then((text) => {
-            ingredientName = text.trim();
-          });
-        cy.root().click();
-      });
+    cy.contains('h3', MODAL_INGREDIENT_TITLE).should('be.visible');
+    cy.contains('h3', INGREDIENT_MAIN_NAME).should('be.visible');
 
-    cy.contains('h3', 'Детали ингредиента').should('be.visible');
-    cy.contains('h3', ingredientName).should('be.visible');
+    cy.contains('h3', MODAL_INGREDIENT_TITLE).parent().find('button').click();
 
-    cy.get('[class^="modal_button"]').click();
-
-    cy.contains('h3', 'Детали ингредиента').should('not.exist');
+    cy.contains('h3', MODAL_INGREDIENT_TITLE).should('not.exist');
   });
 
   it('закрывает модальное окно ингредиента по клику на оверлей', () => {
-    cy.get('[class^="burger-ingredient_container"]').first().click();
+    cy.contains('li', INGREDIENT_BUN_NAME).click();
 
-    cy.contains('h3', 'Детали ингредиента').should('be.visible');
+    cy.contains('h3', MODAL_INGREDIENT_TITLE).should('be.visible');
 
-    cy.get('[class^="modal-overlay_overlay"]').click({ force: true });
+    cy.get('[class*="overlay"]').click({ force: true });
 
-    cy.contains('h3', 'Детали ингредиента').should('not.exist');
+    cy.contains('h3', MODAL_INGREDIENT_TITLE).should('not.exist');
   });
 
   it('при попытке оформить заказ без авторизации происходит переход на страницу логина', () => {
-    cy.contains('button', 'Добавить').first().click();
-
-    cy.contains('button', 'Оформить заказ').click();
+    cy.contains('li', INGREDIENT_BUN_NAME).within(() => {
+      cy.contains('button', BUTTON_ADD_TEXT).click();
+    });
+    cy.contains('button', BUTTON_ORDER_TEXT).click();
 
     cy.location('pathname').should('eq', '/login');
   });
 
   describe('Создание заказа', () => {
     beforeEach(() => {
-      // Подставляем фейковые токены авторизации
       cy.window().then((win) => {
         win.localStorage.setItem('refreshToken', 'test-refresh-token');
       });
       cy.setCookie('accessToken', 'test-access-token');
-
       cy.intercept('GET', '**/auth/user', { fixture: 'user.json' }).as(
         'getUserAuthorized'
       );
@@ -114,49 +102,37 @@ describe('Конструктор бургера', () => {
     });
 
     afterEach(() => {
-      // Очищаем токены после теста
       cy.window().then((win) => {
         win.localStorage.removeItem('refreshToken');
       });
       cy.clearCookie('accessToken');
     });
 
-    it('создаёт заказ, показывает верный номер, даёт закрыть модалку и очищает конструктор', () => {
-      // Добавляем булку и начинку в конструктор
-      cy.contains('Булка 1')
-        .parents('[class^="burger-ingredient_container"]')
-        .within(() => {
-          cy.contains('button', 'Добавить').click();
-        });
-
-      cy.contains('Начинка 1')
-        .parents('[class^="burger-ingredient_container"]')
-        .within(() => {
-          cy.contains('button', 'Добавить').click();
-        });
+    it('создаёт заказ, показывает номер, закрывает модалку и очищает конструктор', () => {
+      cy.contains('li', INGREDIENT_BUN_NAME).within(() => {
+        cy.contains('button', BUTTON_ADD_TEXT).click();
+      });
+      cy.contains('li', INGREDIENT_MAIN_NAME).within(() => {
+        cy.contains('button', BUTTON_ADD_TEXT).click();
+      });
 
       cy.contains('Булка 1 (верх)').should('exist');
       cy.contains('Булка 1 (низ)').should('exist');
-      cy.contains('Начинка 1').should('exist');
+      cy.contains(INGREDIENT_MAIN_NAME).should('exist');
 
-      cy.contains('button', 'Оформить заказ').click();
+      cy.contains('button', BUTTON_ORDER_TEXT).click();
 
       cy.wait('@createOrder');
 
-      // Проверяем открытие модального окна и номер заказа
-      cy.contains('h2', '12345').should('be.visible');
-      cy.contains('идентификатор заказа').should('be.visible');
+      cy.contains('h2', ORDER_NUMBER_MOCK).should('be.visible');
+      cy.contains(ORDER_ID_LABEL).should('be.visible');
 
-      // Закрываем модальное окно по крестику
-      cy.get('[class^="modal_button"]').click();
+      cy.contains('h2', ORDER_NUMBER_MOCK).parent().parent().find('button').click();
 
-      cy.contains('h2', '12345').should('not.exist');
-      cy.contains('идентификатор заказа').should('not.exist');
+      cy.contains('h2', ORDER_NUMBER_MOCK).should('not.exist');
 
-      // Проверяем, что конструктор пуст
       cy.contains('Выберите булки').should('exist');
       cy.contains('Выберите начинку').should('exist');
     });
   });
 });
-

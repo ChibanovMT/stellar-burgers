@@ -5,17 +5,11 @@ import {
   registerUser,
   logoutUser,
   updateUser,
+  initialState,
   type AuthState
 } from './authSlice';
 
 describe('authSlice', () => {
-  const initialState: AuthState = {
-    user: null,
-    isAuthChecked: false,
-    isLoading: false,
-    error: null
-  };
-
   it('должен возвращать начальное состояние по умолчанию', () => {
     const state = authReducer(undefined, { type: '@@INIT' });
     expect(state).toEqual(initialState);

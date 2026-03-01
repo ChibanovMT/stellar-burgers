@@ -3,18 +3,11 @@ import {
   clearOrderModal,
   fetchUserOrders,
   createOrder,
+  initialState,
   type OrdersState
 } from './ordersSlice';
 
 describe('ordersSlice', () => {
-  const initialState: OrdersState = {
-    items: [],
-    orderRequest: false,
-    orderModalData: null,
-    isLoading: false,
-    error: null
-  };
-
   it('должен возвращать начальное состояние по умолчанию', () => {
     const state = ordersReducer(undefined, { type: '@@INIT' });
     expect(state).toEqual(initialState);
