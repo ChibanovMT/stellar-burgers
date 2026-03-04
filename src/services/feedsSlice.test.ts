@@ -92,4 +92,3 @@ describe('feedsSlice', () => {
     expect(state.error).toBe('Ошибка заказа');
   });
 });
-

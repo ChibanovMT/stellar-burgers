@@ -88,4 +88,3 @@ describe('ordersSlice', () => {
     expect(state.error).toBe('Ошибка создания');
   });
 });
-

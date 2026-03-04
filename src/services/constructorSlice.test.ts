@@ -19,7 +19,7 @@ const makeIngredient = (overrides: Partial<any> = {}) =>
     price: 10,
     image: 'img',
     ...overrides
-  } as any);
+  }) as any;
 
 describe('constructorSlice', () => {
   it('должен возвращать начальное состояние по умолчанию', () => {
@@ -112,4 +112,3 @@ describe('constructorSlice', () => {
     expect(state).toEqual(initialState);
   });
 });
-

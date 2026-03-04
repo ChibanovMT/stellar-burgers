@@ -179,4 +179,3 @@ describe('authSlice', () => {
     expect(state.error).toBe('Ошибка выхода');
   });
 });
-

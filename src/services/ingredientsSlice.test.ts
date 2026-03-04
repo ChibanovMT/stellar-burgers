@@ -43,4 +43,3 @@ describe('ingredientsSlice', () => {
     expect(state.error).toBe('Ошибка');
   });
 });
-

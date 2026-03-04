@@ -12,7 +12,9 @@ export const OrderDetailsPage: FC = () => {
   const orderNumber = number ? parseInt(number, 10) : null;
 
   const ingredients = useSelector((state) => state.ingredients.items);
-  const isIngredientsLoading = useSelector((state) => state.ingredients.isLoading);
+  const isIngredientsLoading = useSelector(
+    (state) => state.ingredients.isLoading
+  );
   const currentOrder = useSelector((state) => state.feeds.currentOrder);
   const orderFromOrders = useSelector((state) =>
     state.orders.items.find((order) => order.number === orderNumber)
@@ -72,7 +74,12 @@ export const OrderDetailsPage: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (isLoading || isIngredientsLoading || ingredients.length === 0 || !orderInfo) {
+  if (
+    isLoading ||
+    isIngredientsLoading ||
+    ingredients.length === 0 ||
+    !orderInfo
+  ) {
     return <Preloader />;
   }
 

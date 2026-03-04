@@ -70,7 +70,8 @@ const FeedOrderModal: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const background = (location.state as { background?: Location })?.background;
-  const handleClose = () => navigate(background?.pathname || '/feed', { replace: true });
+  const handleClose = () =>
+    navigate(background?.pathname || '/feed', { replace: true });
 
   return (
     <Modal title='Детали заказа' onClose={handleClose}>
@@ -83,7 +84,8 @@ const IngredientModal: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const background = (location.state as { background?: Location })?.background;
-  const handleClose = () => navigate(background?.pathname || '/', { replace: true });
+  const handleClose = () =>
+    navigate(background?.pathname || '/', { replace: true });
 
   return (
     <Modal title='Детали ингредиента' onClose={handleClose}>
@@ -96,7 +98,8 @@ const ProfileOrderModal: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const background = (location.state as { background?: Location })?.background;
-  const handleClose = () => navigate(background?.pathname || '/profile/orders', { replace: true });
+  const handleClose = () =>
+    navigate(background?.pathname || '/profile/orders', { replace: true });
 
   return (
     <Modal title='Детали заказа' onClose={handleClose}>
