@@ -38,9 +38,9 @@ describe('Конструктор бургера', () => {
 
   it('отображает страницу конструктора', () => {
     cy.contains('h1', 'Соберите бургер').should('be.visible');
-    cy.contains('button', 'Булки').should('be.visible');
-    cy.contains('button', 'Начинки').should('be.visible');
-    cy.contains('button', 'Соусы').should('be.visible');
+    cy.contains('Булки').should('be.visible');
+    cy.contains('Начинки').should('be.visible');
+    cy.contains('Соусы').should('be.visible');
     cy.contains('button', BUTTON_ORDER_TEXT).should('be.visible');
   });
 
@@ -73,7 +73,7 @@ describe('Конструктор бургера', () => {
 
     cy.contains('h3', MODAL_INGREDIENT_TITLE).should('be.visible');
 
-    cy.get('[class*="overlay"]').click({ force: true });
+    cy.get('[data-testid="modal-overlay"]').click({ force: true });
 
     cy.contains('h3', MODAL_INGREDIENT_TITLE).should('not.exist');
   });
